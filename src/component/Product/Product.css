@@ -3,6 +3,7 @@
     height: 510px;
     border: 1px solid #95A0A7;
     border-radius: 8px;
+    position: relative;
 }
 
 .product img {
@@ -10,7 +11,6 @@
     height: 286px;
     margin: 8px;
     border-radius: 8px;
-    position: relative;
 }
 
 .product-name {
@@ -43,4 +43,7 @@
     position: absolute;
     bottom: 0;
 
+}
+.btn-cart:hover{
+    background-color: orange;
 }
