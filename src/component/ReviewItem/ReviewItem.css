@@ -3,9 +3,44 @@
     border-radius: 8px;
     padding: 8px;
     margin: 10px;
+    display: flex;
+    align-items: center;
 }
+.review-details .product-title{
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: 0.0015em;
+
+}
+.review-details{
+    flex-grow: 1;
+}
+.review-details p{
+    margin: 0 15px;
+}
+
 
 .review-item img{
     width: 91px;
     height: 91px;
+    border-radius: 6px;
+}
+
+.orange-text{
+    color: rgb(255, 106, 0);
+}
+
+.dlt-btn{
+    border-radius: 50%;
+    height: 55px;
+    width: 55px;
+    background-color: rgba(255, 0, 0, 0.229);
+   margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dlt-icon{
+    color: red;
+    font-size: 27px;
 }
