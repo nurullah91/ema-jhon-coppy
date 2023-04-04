@@ -11,6 +11,24 @@
     gap: 2rem;
 }
 
+.proceed-btn{
+    background-color: rgb(166, 237, 14);
+    margin-top: 10px;
+    width: 100%;
+    font-size: 21px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.proceed-link{
+    text-decoration: none;
+}
+
+
+
+
+
 
 
 @media screen and (max-width:480px) {
