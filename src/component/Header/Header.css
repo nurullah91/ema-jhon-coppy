@@ -19,3 +19,8 @@ nav a{
 nav a:hover{
     color: orange;
 }
+
+.text-yellow{
+    color: rgb(245, 245, 8);
+    margin-left: 10px;
+}

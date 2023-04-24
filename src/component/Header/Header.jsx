@@ -5,7 +5,10 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../Providers/AuthProvider';
 const Header = () => {
 
-  const {user} = useContext(AuthContext)
+  const {user,logOut} = useContext(AuthContext)
+  const handleLogOut = () =>{
+    logOut()
+  }
     return (
         <div className='header'>
             <img src={logo} alt="logo" />
@@ -16,7 +19,8 @@ const Header = () => {
             <Link to="/inventory">Inventory</Link>
             <Link to="/login">Login</Link>
             <Link to="/signup">Sign up</Link>
-            {user && <span>Welcome</span>}
+            {user && <span className='text-yellow'>Welcome {user.email} <button onClick={handleLogOut}>Sign out</button></span>}
+            
           </nav>
          
         </div>
