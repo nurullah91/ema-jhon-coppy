@@ -3,27 +3,50 @@ import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import "./Shop.css"
 import { addToDb, deleteShoppingCart, getShoppingCart } from "../../../utilities/fakedb"
-import { Link } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 const Shop = () => {
 
     const [products, setProducts] = useState([])
-
     const [cart, setCart] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0)
+    const [itemsPerPage, setItemsPerPage] = useState(10)
+    const { totalProducts } = useLoaderData();
+
+
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
+
+    // const pageNumber = [];
+    // for(let i = 1; i>=totalPages; i++){
+    //     pageNumber.push(i);
+    // }
+
+    const pageNumbers = [...Array(totalPages).keys()];
 
 
 
-    const  handleClearCart= () =>{
+    const handleClearCart = () => {
         setCart([]);
         deleteShoppingCart();
     }
-    useEffect(() => {
-        fetch("http://localhost:5000/products")
-            .then(res => res.json())
-            .then(data => setProducts(data))
-    }, [])
+    // useEffect(() => {
+    //     fetch("http://localhost:5000/products")
+    //         .then(res => res.json())
+    //         .then(data => setProducts(data))
+    // }, [])
+
+    useEffect( ()=>{
+        async function fetchData(){
+            const response = await fetch(`http://localhost:5000/products?page=${currentPage}&limit=${itemsPerPage}`);
+
+            const data = await response.json();
+            setProducts(data);
+
+        }
+        fetchData();
+    },[currentPage, itemsPerPage]);
 
     useEffect(() => {
         const storedCart = getShoppingCart();
@@ -60,14 +83,14 @@ const Shop = () => {
         let newCart = [];
         const exist = cart.find(pd => pd._id === product._id);
 
-        if(!exist){
+        if (!exist) {
             product.quantity = 1;
-            newCart = [...cart, product] 
+            newCart = [...cart, product]
         }
-        else{
+        else {
             exist.quantity = exist.quantity + 1;
 
-            const remaining = cart.filter(pd => pd._id !==product._id);
+            const remaining = cart.filter(pd => pd._id !== product._id);
             newCart = [...remaining, exist];
         }
 
@@ -76,27 +99,58 @@ const Shop = () => {
         addToDb(product._id)
     }
 
+    const options = [5, 10, 15, 20];
+    const handleSelectChange = event => {
+        setItemsPerPage(parseInt(event.target.value));
+        setCurrentPage(0);
+    }
+
 
     return (
-        <div className='shop-container'>
-            <div className='Products-container'>
-                {
-                    products.map(product => <Product product={product}
-                        key={product._id}
-                        handleAddToCart={handleAddToCart}
-                    ></Product>)
-                }
+        <div>
+            <div className='shop-container'>
+                <div className='Products-container'>
+                    {
+                        products.map(product => <Product product={product}
+                            key={product._id}
+                            handleAddToCart={handleAddToCart}
+                        ></Product>)
+                    }
+                </div>
+                <div className="card-container">
+                    <Cart
+                        cart={cart}
+                        handleClearCart={handleClearCart}
+                    >
+                        <Link className='proceed-link' to='/orders'>
+                            <button className='proceed-btn' >Review Orders  <FontAwesomeIcon icon={faArrowRight} /></button>
+
+                        </Link>
+                    </Cart>
+                </div>
             </div>
-            <div className="card-container">
-                <Cart
-                 cart={cart}
-                 handleClearCart={handleClearCart}
-                 >
-                    <Link className='proceed-link' to='/orders'>
-                        <button className='proceed-btn' >Review Orders  <FontAwesomeIcon icon={faArrowRight} /></button>
-                       
-                    </Link>
-                 </Cart>
+            {/* pagination */}
+            <div className="pagination">
+                <h3>This is page number: {currentPage}</h3>
+                {
+                    pageNumbers.map(number => <button
+
+                        className={currentPage === number ? 'selected' : ''}
+                        key={number}
+                        onClick={() => setCurrentPage(number)}
+                    >{number}</button>)
+                }
+
+                <select value={itemsPerPage} onChange={handleSelectChange}>
+                    {
+                        options.map(option => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))
+                    }
+                </select>
+
             </div>
         </div>
     );
