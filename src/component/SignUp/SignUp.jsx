@@ -6,6 +6,7 @@ import { AuthContext } from '../Providers/AuthProvider';
 const SignUp = () => {
 
     const [error, setError] = useState('');
+    const [show, setShow] = useState(false);
     const {createUser} = useContext(AuthContext)
 
     const handleSignUp = event =>{
@@ -53,12 +54,14 @@ const SignUp = () => {
         </div>
         <div className='form-control'>
             <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="" required/>
+            <input type={show? "text": "password"} name="password" id="" required/>
         </div>
 
         <div className='form-control'>
             <label htmlFor="confirm">Confirm Password</label>
-            <input type="password" name="confirm" id="" required/>
+            <input type={show? "text": "password"} name="confirm" id="" required/>
+
+            <h4 onClick={() => setShow(!show)}>{show? <span>Hide Password</span>: <span>Show password</span>}</h4>
         </div>
 
         <input className='btn-submit' type="submit" value="Sign up" />
