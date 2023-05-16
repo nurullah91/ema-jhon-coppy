@@ -37,8 +37,8 @@ const Shop = () => {
     //         .then(data => setProducts(data))
     // }, [])
 
-    useEffect( ()=>{
-        async function fetchData(){
+    useEffect(() => {
+        async function fetchData() {
             const response = await fetch(`http://localhost:5000/products?page=${currentPage}&limit=${itemsPerPage}`);
 
             const data = await response.json();
@@ -46,35 +46,45 @@ const Shop = () => {
 
         }
         fetchData();
-    },[currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage]);
 
     useEffect(() => {
         const storedCart = getShoppingCart();
-        const savedCart = [];
+        const ids = Object.keys(storedCart);
 
+        fetch('http://localhost:5000/productsById', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(ids)
 
+        })
+            .then(res => res.json())
+            .then(cartProducts => {
+                const savedCart = [];
 
-        // step-1: get the id of the added product;
-        for (const id in storedCart) {
-            // step-2: get product by using id;
-            const addedProduct = products.find(product => product._id === id);
-            if (addedProduct) {
-                // step-3: get added quantity;
-                const quantity = storedCart[id];
+                // step-1: get the id of the added product;
+                for (const id in storedCart) {
+                    // step-2: get product by using id;
+                    const addedProduct = cartProducts.find(product => product._id === id);
+                    if (addedProduct) {
+                        // step-3: get added quantity;
+                        const quantity = storedCart[id];
 
-                // step-4: add quantity to the product quantity;
-                addedProduct.quantity = quantity;
+                        // step-4: add quantity to the product quantity;
+                        addedProduct.quantity = quantity;
 
-                // step-5: add the product to the saved cart array;
-                savedCart.push(addedProduct);
-            }
-        }
+                        // step-5: add the product to the saved cart array;
+                        savedCart.push(addedProduct);
+                    }
+                }
 
-        // step-6: set the cart;
-        setCart(savedCart);
+                // step-6: set the cart;
+                setCart(savedCart);
+            })
 
-
-    }, [products])
+    }, [])
 
     const handleAddToCart = (product) => {
         // const newCart = [...cart, product];
